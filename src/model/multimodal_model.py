@@ -15,13 +15,12 @@ class MultimodalBiometricModel(nn.Module):
     def __init__(self, num_classes=1000):
         super().__init__()
 
-        # 3 modality
+        # 3 MODALITY
         self.face = FaceModality()
         self.iris = IrisModality()
         self.fingerprint = FingerprintModality()
 
         # SHALLOW LEVEL FUSION
-        # makaledeki FC3 tipik olarak 256–512 arası oluyor
         self.shallow_fusion = WeightedFusion(
             in_dims=[256, 256, 256],
             out_dim=256
@@ -47,8 +46,6 @@ class MultimodalBiometricModel(nn.Module):
     def forward(self, face_img, iris_img, fp_img):
 
         # MODALITY EXTRACTION
-        # her modality → (fc3_shallow, fc6_deep)
-
         face_shallow, face_deep = self.face(face_img)
         iris_shallow, iris_deep = self.iris(iris_img)
         fp_shallow,   fp_deep   = self.fingerprint(fp_img)
